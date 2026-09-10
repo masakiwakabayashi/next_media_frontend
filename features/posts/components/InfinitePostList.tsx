@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import type { InfiniteData } from '@tanstack/react-query'
-import type { PostsPage } from '@/external/repositories/postRepository'
+import type { PostsPage } from '@/external/repositories/postRepository.types'
 import PostCard from './PostCard'
 
 // 無限スクロール記事一覧の表示部分。取得ロジック（useInfiniteQuery）は

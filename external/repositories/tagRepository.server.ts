@@ -1,9 +1,10 @@
 // server-side only: ログインユーザーのセッション（Cookie）を引き継ぎ、RLS を
 // 適用した状態で tags を読み取るためのリポジトリ。
 import { createServerSupabaseClient } from '@/lib/supabase/server'
-import type { Tag, TagWithCount } from './tagRepository'
+import type { Tag, TagWithCount } from './tagRepository.types'
 
-export type { Tag, TagWithCount }
+// 型定義は tagRepository.types.ts に集約している。
+export type * from './tagRepository.types'
 
 export async function getTags(): Promise<TagWithCount[]> {
   const supabase = await createServerSupabaseClient()

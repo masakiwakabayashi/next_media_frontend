@@ -1,17 +1,8 @@
 import { supabase } from '@/lib/supabase/client'
 
-export type Tag = {
-  id: string
-  name: string
-  slug: string
-  created_at: string
-}
-
-export type TagWithCount = Tag & {
-  postCount: number
-}
-
 // 読み取り（サーバーコンポーネントから利用）は tagRepository.server.ts を参照。
+// 型定義は tagRepository.types.ts に集約している。
+export type * from './tagRepository.types'
 
 export async function createTag(data: {
   name: string

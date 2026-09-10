@@ -2,22 +2,15 @@
 
 import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
-import { updatePost, updatePostTags, PostForEdit } from '../../../external/repositories/postRepository'
-
-type Category = {
-  id: string
-  name: string
-}
-
-type Tag = {
-  id: string
-  name: string
-}
+import { updatePost, updatePostTags } from '../../../external/repositories/postRepository'
+import type { PostForEdit } from '@/external/repositories/postRepository.types'
+import type { Category } from '@/external/repositories/categoryRepository.types'
+import type { Tag } from '@/external/repositories/tagRepository.types'
 
 type Props = {
   post: PostForEdit
-  categories: Category[]
-  tags: Tag[]
+  categories: Pick<Category, 'id' | 'name'>[]
+  tags: Pick<Tag, 'id' | 'name'>[]
 }
 
 export default function PostEdit({ post, categories, tags }: Props) {

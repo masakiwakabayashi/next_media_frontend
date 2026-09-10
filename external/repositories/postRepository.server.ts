@@ -5,24 +5,15 @@ import { createServerSupabaseClient } from '@/lib/supabase/server'
 import type {
   PostSummary,
   Post,
-  PostListResult,
   PostsCursor,
   PostsPage,
   PostMeta,
   PostForEdit,
   PostOption,
-} from './postRepository'
+} from './postRepository.types'
 
-export type {
-  PostSummary,
-  Post,
-  PostListResult,
-  PostsCursor,
-  PostsPage,
-  PostMeta,
-  PostForEdit,
-  PostOption,
-}
+// 型定義は postRepository.types.ts に集約している。
+export type * from './postRepository.types'
 
 const POST_LIST_SELECT = `
   id,

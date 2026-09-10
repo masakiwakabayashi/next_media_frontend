@@ -1,12 +1,10 @@
 // server-side only: サーバーコンポーネントからのみ利用。ログインユーザーの
 // セッション（Cookie）を引き継ぎ、RLS を適用した状態で categories を読み取る。
 import { createServerSupabaseClient } from '@/lib/supabase/server'
+import type { Category } from './categoryRepository.types'
 
-export type Category = {
-  id: string
-  name: string
-  slug: string
-}
+// 型定義は categoryRepository.types.ts に集約している。
+export type * from './categoryRepository.types'
 
 export async function getCategories(): Promise<Category[]> {
   const supabase = await createServerSupabaseClient()

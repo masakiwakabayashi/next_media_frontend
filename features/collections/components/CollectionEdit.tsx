@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation'
 import {
   updateCollection,
   updateCollectionPosts,
-  type CollectionForEdit,
-  type CollectionLinkedPost,
 } from '@/external/repositories/collectionRepository.client'
-import type { PostOption } from '@/external/repositories/postRepository'
+import type {
+  CollectionForEdit,
+  CollectionLinkedPost,
+} from '@/external/repositories/collectionRepository.types'
+import type { PostOption } from '@/external/repositories/postRepository.types'
 
 type Props = {
   collection: CollectionForEdit

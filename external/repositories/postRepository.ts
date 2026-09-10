@@ -1,113 +1,11 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase/client'
-import type { CreatePostInput } from '@/external/schemas/postSchema'
+import type { CreatePostData } from './postRepository.types'
 
 // 読み取り（サーバーコンポーネントから利用）は postRepository.server.ts を参照。
 // このファイルはクライアントコンポーネントから呼ばれる書き込み系のみを持つ。
-
-export type PostSummary = {
-  id: string
-  title: string
-  slug: string
-  image_path: string | null
-  content: string
-  status: 'draft' | 'published' | 'archived'
-  published_at: string | null
-  created_at: string
-  author: {
-    display_name: string
-  } | null
-  category: {
-    name: string
-    slug: string
-  } | null
-  post_tags: {
-    tag: {
-      id: string
-      name: string
-      slug: string
-    }
-  }[]
-}
-
-export type Post = {
-  id: string
-  title: string
-  slug: string
-  image_path: string | null
-  content: string
-  google_maps_url: string | null
-  status: 'draft' | 'published' | 'archived'
-  published_at: string | null
-  created_at: string
-  author: {
-    display_name: string
-    bio: string | null
-    avatar_url: string | null
-  } | null
-  category: {
-    name: string
-    slug: string
-  } | null
-  post_tags: {
-    tag: {
-      id: string
-      name: string
-      slug: string
-    }
-  }[]
-}
-
-export type CreatePostData = CreatePostInput
-
-export type PostListResult = {
-  posts: PostSummary[]
-  totalCount: number
-}
-
-// 無限スクロール用のカーソル。(published_at, id) の複合キーで
-// 「最後に読み込んだ記事より後ろ」を表す。
-export type PostsCursor = {
-  publishedAt: string
-  id: string
-}
-
-export type PostsPage = {
-  posts: PostSummary[]
-  nextCursor: PostsCursor | null
-}
-
-export type PostMeta = {
-  title: string
-  content: string
-  image_path: string | null
-}
-
-// セレクトボックス等で記事を選ばせるための軽量な選択肢。
-export type PostOption = {
-  id: string
-  title: string
-  slug: string
-}
-
-export type PostForEdit = {
-  id: string
-  title: string
-  slug: string
-  image_path: string | null
-  content: string
-  status: 'draft' | 'published' | 'archived'
-  published_at: string | null
-  category_id: string | null
-  author_id: string
-  post_tags: {
-    tag: {
-      id: string
-      name: string
-      slug: string
-    }
-  }[]
-}
+// 型定義は postRepository.types.ts に集約している。
+export type * from './postRepository.types'
 
 export async function updatePost(id: string, data: Partial<CreatePostData>): Promise<{ error: string | null }> {
   const { error } = await supabase

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import EyecatchImage from '@/components/EyecatchImage'
-import type { PostSummary } from '@/external/repositories/postRepository'
+import type { PostSummary } from '@/external/repositories/postRepository.types'
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)

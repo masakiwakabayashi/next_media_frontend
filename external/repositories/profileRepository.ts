@@ -1,22 +1,9 @@
 import { supabase } from '@/lib/supabase/client'
 
-export type Author = {
-  id: string
-  display_name: string
-}
-
-export type UserProfile = {
-  id: string
-  user_id: string | null
-  display_name: string
-  bio: string | null
-  avatar_url: string | null
-  created_at: string
-  updated_at: string
-}
-
 // 読み取り（サーバーコンポーネントから利用）は profileRepository.server.ts を参照。
 // getDisplayName / updateDisplayName はクライアントから呼ばれるためここに残す。
+// 型定義は profileRepository.types.ts に集約している。
+export type * from './profileRepository.types'
 
 export async function getDisplayName(userId: string): Promise<string | null> {
   const { data } = await supabase
