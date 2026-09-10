@@ -2,6 +2,7 @@ import Link from 'next/link'
 import EyecatchImage from '@/components/EyecatchImage'
 import { getCollection } from '@/external/repositories/collectionRepository'
 import { notFound } from 'next/navigation'
+import CollectionAdminEditLink from './CollectionAdminEditLink'
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
@@ -32,6 +33,11 @@ export default async function CollectionDetail({ collectionSlug }: { collectionS
           {collection.description}
         </p>
       )}
+
+      {/* 編集リンク（管理者のみ） */}
+      <div className="mb-6">
+        <CollectionAdminEditLink slug={collection.slug} />
+      </div>
 
       {posts.length === 0 ? (
         <div className="py-8 text-center text-zinc-500">

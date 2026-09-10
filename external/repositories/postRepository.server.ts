@@ -10,6 +10,7 @@ import type {
   PostsPage,
   PostMeta,
   PostForEdit,
+  PostOption,
 } from './postRepository'
 
 export type {
@@ -20,6 +21,7 @@ export type {
   PostsPage,
   PostMeta,
   PostForEdit,
+  PostOption,
 }
 
 const POST_LIST_SELECT = `
@@ -311,6 +313,23 @@ export async function getPublishedPostForEdit(slug: string): Promise<PostForEdit
   }
 
   return data
+}
+
+// 特集への記事紐付けなど、公開記事から選ばせるための選択肢一覧。
+export async function getPostOptions(): Promise<PostOption[]> {
+  const supabase = await createServerSupabaseClient()
+  const { data, error } = await supabase
+    .from('posts')
+    .select('id, title, slug')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching post options:', error)
+    return []
+  }
+
+  return data || []
 }
 
 export async function getDraftPosts(): Promise<PostSummary[]> {

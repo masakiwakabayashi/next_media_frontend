@@ -83,6 +83,13 @@ export type PostMeta = {
   image_path: string | null
 }
 
+// セレクトボックス等で記事を選ばせるための軽量な選択肢。
+export type PostOption = {
+  id: string
+  title: string
+  slug: string
+}
+
 export type PostForEdit = {
   id: string
   title: string
