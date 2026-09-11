@@ -1,11 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import CollectionDetail from './CollectionDetail'
-import {
-  getCollection,
-  type Collection,
-  type CollectionPost,
-} from '@/external/repositories/collectionRepository'
+import { getCollection } from '@/external/repositories/collectionRepository'
+import type { Collection, CollectionPost } from '@/types/collection'
 import { notFound } from 'next/navigation'
 
 vi.mock('@/external/repositories/collectionRepository', () => ({

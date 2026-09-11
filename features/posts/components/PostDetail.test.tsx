@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import PostDetail from './PostDetail'
-import { getPost, type Post } from '@/external/repositories/postRepository.server'
+import { getPost } from '@/external/repositories/postRepository.server'
+import type { Post } from '@/types/post'
 
 vi.mock('@/external/repositories/postRepository.server', () => ({
   getPost: vi.fn(),

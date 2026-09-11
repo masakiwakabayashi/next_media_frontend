@@ -1,10 +1,8 @@
 'use server'
 
-import {
-  getPostsByTagPage,
-  type PostsPage,
-} from '@/external/repositories/postRepository.server'
+import { getPostsByTagPage } from '@/external/repositories/postRepository.server'
 import { tagPostsPageInputSchema } from '@/external/schemas/postSchema'
+import type { PostsPage } from '@/types/post'
 
 // 無限スクロール用にタグ別記事一覧の1ページ分を取得する Server Action。
 // 読み取りロジックは repository の getPostsByTagPage に集約している。

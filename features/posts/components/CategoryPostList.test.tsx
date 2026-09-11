@@ -4,10 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import CategoryPostList from './CategoryPostList'
 import { getPostsByCategoryPageAction } from '@/external/handler/post/getPostsByCategoryPage'
-import type {
-  PostSummary,
-  PostsPage,
-} from '@/external/repositories/postRepository'
+import type { PostSummary, PostsPage } from '@/types/post'
 
 vi.mock('@/external/handler/post/getPostsByCategoryPage', () => ({
   getPostsByCategoryPageAction: vi.fn(),

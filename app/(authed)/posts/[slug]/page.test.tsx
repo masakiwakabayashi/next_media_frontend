@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import PostPage, { generateMetadata } from './page'
-import { getPostMetaBySlug, type PostMeta } from '@/external/repositories/postRepository.server'
+import { getPostMetaBySlug } from '@/external/repositories/postRepository.server'
+import type { PostMeta } from '@/types/post'
 import { notFound } from 'next/navigation'
 
 vi.mock('@/external/repositories/postRepository.server', () => ({

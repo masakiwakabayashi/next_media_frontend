@@ -3,19 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { setUserBannedAction } from '@/external/handler/user/setUserBanned'
-
-export type UserProfile = {
-  id: string
-  user_id: string | null
-  display_name: string
-  bio: string | null
-  avatar_url: string | null
-  created_at: string
-  updated_at: string
-  email?: string
-  banned?: boolean
-  isAdmin?: boolean
-}
+import type { UserProfileWithAuthStatus as UserProfile } from '@/types/profile'
 
 type Props = {
   initialUsers: UserProfile[]

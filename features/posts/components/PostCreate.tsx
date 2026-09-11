@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation'
 import { uploadPostImage } from '@/external/repositories/postRepository'
 import { createPostAction } from '@/external/handler/post/createPost'
 import EyecatchImage from '@/components/EyecatchImage'
-import type { Category } from '@/external/repositories/categoryRepository.types'
-import type { Author } from '@/external/repositories/profileRepository.types'
-import type { Tag } from '@/external/repositories/tagRepository.types'
+import type { Category } from '@/types/category'
+import type { Author } from '@/types/profile'
+import type { Tag } from '@/types/tag'
 
 type Props = {
   categories: Pick<Category, 'id' | 'name'>[]

@@ -1,9 +1,12 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import NewPostPage from './page'
-import { getCategories, type Category } from '@/external/repositories/categoryRepository'
-import { getAuthors, type Author } from '@/external/repositories/profileRepository.server'
-import { getTagOptions, type Tag } from '@/external/repositories/tagRepository.server'
+import { getCategories } from '@/external/repositories/categoryRepository'
+import { getAuthors } from '@/external/repositories/profileRepository.server'
+import { getTagOptions } from '@/external/repositories/tagRepository.server'
+import type { Category } from '@/types/category'
+import type { Author } from '@/types/profile'
+import type { Tag } from '@/types/tag'
 
 vi.mock('@/external/repositories/categoryRepository', () => ({
   getCategories: vi.fn(),

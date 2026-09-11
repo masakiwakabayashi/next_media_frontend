@@ -1,14 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import CollectionEditPage from './page'
-import {
-  getCollectionForEdit,
-  type CollectionForEdit,
-} from '@/external/repositories/collectionRepository'
-import {
-  getPostOptions,
-  type PostOption,
-} from '@/external/repositories/postRepository.server'
+import { getCollectionForEdit } from '@/external/repositories/collectionRepository'
+import { getPostOptions } from '@/external/repositories/postRepository.server'
+import type { CollectionForEdit } from '@/types/collection'
+import type { PostOption } from '@/types/post'
 import { notFound } from 'next/navigation'
 
 vi.mock('@/external/repositories/collectionRepository', () => ({

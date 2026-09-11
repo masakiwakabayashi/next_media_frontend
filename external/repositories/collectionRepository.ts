@@ -6,10 +6,9 @@ import type {
   CollectionPost,
   CollectionLinkedPost,
   CollectionForEdit,
-} from './collectionRepository.types'
+} from '@/types/collection'
 
-// 型定義は collectionRepository.types.ts に集約している。
-export type * from './collectionRepository.types'
+// 型定義は types/collection.ts に集約している。
 
 export async function getCollections(): Promise<Collection[]> {
   const supabase = await createServerSupabaseClient()

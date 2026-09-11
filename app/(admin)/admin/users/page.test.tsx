@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import AdminUsersPage from './page'
-import { getUserProfiles, type UserProfile } from '@/external/repositories/profileRepository.server'
+import { getUserProfiles } from '@/external/repositories/profileRepository.server'
+import type { UserProfile } from '@/types/profile'
 import { getAuthUserStatuses } from '@/external/repositories/authAdminRepository'
 
 vi.mock('@/external/repositories/profileRepository.server', () => ({

@@ -1,10 +1,9 @@
 // server-side only: ログインユーザーのセッション（Cookie）を引き継ぎ、RLS を
 // 適用した状態で profiles を読み取るためのリポジトリ。
 import { createServerSupabaseClient } from '@/lib/supabase/server'
-import type { Author, UserProfile } from './profileRepository.types'
+import type { Author, UserProfile } from '@/types/profile'
 
-// 型定義は profileRepository.types.ts に集約している。
-export type * from './profileRepository.types'
+// 型定義は types/profile.ts に集約している。
 
 export async function getUserProfiles(): Promise<UserProfile[]> {
   const supabase = await createServerSupabaseClient()

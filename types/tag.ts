@@ -1,4 +1,4 @@
-// tags リポジトリ（client / server 共通）の型定義。
+// tags に関する、コンポーネントとリポジトリの双方から参照する型定義。
 export type Tag = {
   id: string
   name: string

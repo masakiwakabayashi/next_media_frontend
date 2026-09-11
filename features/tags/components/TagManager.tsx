@@ -3,11 +3,11 @@
 import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  TagWithCount,
   createTag,
   updateTag,
   deleteTag,
 } from '@/external/repositories/tagRepository'
+import type { TagWithCount } from '@/types/tag'
 
 type Props = {
   initialTags: TagWithCount[]

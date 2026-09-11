@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation'
 import {
   updateCollection,
   updateCollectionPosts,
-  type CollectionForEdit,
 } from '@/external/repositories/collectionRepository.client'
-import type { PostOption } from '@/external/repositories/postRepository'
+import type { CollectionForEdit } from '@/types/collection'
+import type { PostOption } from '@/types/post'
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),

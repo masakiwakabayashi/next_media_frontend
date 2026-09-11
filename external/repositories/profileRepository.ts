@@ -2,8 +2,7 @@ import { supabase } from '@/lib/supabase/client'
 
 // 読み取り（サーバーコンポーネントから利用）は profileRepository.server.ts を参照。
 // getDisplayName / updateDisplayName はクライアントから呼ばれるためここに残す。
-// 型定義は profileRepository.types.ts に集約している。
-export type * from './profileRepository.types'
+// 型定義は types/profile.ts に集約している。
 
 export async function getDisplayName(userId: string): Promise<string | null> {
   const { data } = await supabase

@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import AdminTagsPage from './page'
-import { getTags, type TagWithCount } from '@/external/repositories/tagRepository.server'
+import { getTags } from '@/external/repositories/tagRepository.server'
+import type { TagWithCount } from '@/types/tag'
 
 vi.mock('@/external/repositories/tagRepository.server', () => ({
   getTags: vi.fn(),

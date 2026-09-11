@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import PostEdit from './PostEdit'
 import { useRouter } from 'next/navigation'
-import { updatePost, updatePostTags, type PostForEdit } from '@/external/repositories/postRepository'
+import { updatePost, updatePostTags } from '@/external/repositories/postRepository'
+import type { PostForEdit } from '@/types/post'
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),

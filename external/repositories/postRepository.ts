@@ -1,11 +1,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase/client'
-import type { CreatePostData } from './postRepository.types'
+import type { CreatePostData } from '@/types/post'
 
 // 読み取り（サーバーコンポーネントから利用）は postRepository.server.ts を参照。
 // このファイルはクライアントコンポーネントから呼ばれる書き込み系のみを持つ。
-// 型定義は postRepository.types.ts に集約している。
-export type * from './postRepository.types'
+// 型定義は types/post.ts に集約している。
 
 export async function updatePost(id: string, data: Partial<CreatePostData>): Promise<{ error: string | null }> {
   const { error } = await supabase

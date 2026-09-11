@@ -1,7 +1,7 @@
 'use client'
 
 import { useInfiniteQuery } from '@tanstack/react-query'
-import type { PostsCursor } from '@/external/repositories/postRepository.types'
+import type { PostsCursor } from '@/types/post'
 import { getPostsByTagPageAction } from '@/external/handler/post/getPostsByTagPage'
 import { tagPostsQueryKey } from '../api/postsQuery'
 

@@ -1,6 +1,4 @@
-// collections リポジトリ（client / server 共通）の型定義。
-// 実装は collectionRepository.ts（読み取り）と collectionRepository.client.ts（書き込み）に分かれるが、
-// 型はここに集約し、両方から re-export する。
+// collections に関する、コンポーネントとリポジトリの双方から参照する型定義。
 export type Collection = {
   id: string
   title: string

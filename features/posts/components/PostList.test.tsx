@@ -4,10 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import PostList from './PostList'
 import { getPostsPageAction } from '@/external/handler/post/getPostsPage'
-import type {
-  PostSummary,
-  PostsPage,
-} from '@/external/repositories/postRepository'
+import type { PostSummary, PostsPage } from '@/types/post'
 
 vi.mock('@/external/handler/post/getPostsPage', () => ({
   getPostsPageAction: vi.fn(),

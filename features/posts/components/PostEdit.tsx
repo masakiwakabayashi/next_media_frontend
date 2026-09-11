@@ -3,9 +3,9 @@
 import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { updatePost, updatePostTags } from '../../../external/repositories/postRepository'
-import type { PostForEdit } from '@/external/repositories/postRepository.types'
-import type { Category } from '@/external/repositories/categoryRepository.types'
-import type { Tag } from '@/external/repositories/tagRepository.types'
+import type { PostForEdit } from '@/types/post'
+import type { Category } from '@/types/category'
+import type { Tag } from '@/types/tag'
 
 type Props = {
   post: PostForEdit

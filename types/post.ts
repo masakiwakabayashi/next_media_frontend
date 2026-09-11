@@ -1,6 +1,4 @@
-// posts リポジトリ（client / server 共通）の型定義。
-// 実装は postRepository.ts（書き込み）と postRepository.server.ts（読み取り）に分かれるが、
-// 型はここに集約し、両方から re-export する。
+// posts に関する、コンポーネントとリポジトリの双方から参照する型定義。
 import type { CreatePostInput } from '@/external/schemas/postSchema'
 
 export type PostSummary = {

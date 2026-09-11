@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import DraftPostList from './DraftPostList'
-import { getDraftPosts, type PostSummary } from '@/external/repositories/postRepository.server'
+import { getDraftPosts } from '@/external/repositories/postRepository.server'
+import type { PostSummary } from '@/types/post'
 
 vi.mock('@/external/repositories/postRepository.server', () => ({
   getDraftPosts: vi.fn(),

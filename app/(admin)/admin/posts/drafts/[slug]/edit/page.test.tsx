@@ -1,13 +1,13 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import DraftEditPage from './page'
-import {
-  getDraftPostForEdit,
-  type PostForEdit,
-} from '@/external/repositories/postRepository.server'
-import { getCategories, type Category } from '@/external/repositories/categoryRepository'
-import { getTagOptions, type Tag } from '@/external/repositories/tagRepository.server'
+import { getDraftPostForEdit } from '@/external/repositories/postRepository.server'
+import { getCategories } from '@/external/repositories/categoryRepository'
+import { getTagOptions } from '@/external/repositories/tagRepository.server'
 import { notFound } from 'next/navigation'
+import type { PostForEdit } from '@/types/post'
+import type { Category } from '@/types/category'
+import type { Tag } from '@/types/tag'
 
 vi.mock('@/external/repositories/postRepository.server', () => ({
   getDraftPostForEdit: vi.fn(),

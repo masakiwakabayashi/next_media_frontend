@@ -9,8 +9,8 @@ import {
 import type {
   CollectionForEdit,
   CollectionLinkedPost,
-} from '@/external/repositories/collectionRepository.types'
-import type { PostOption } from '@/external/repositories/postRepository.types'
+} from '@/types/collection'
+import type { PostOption } from '@/types/post'
 
 type Props = {
   collection: CollectionForEdit

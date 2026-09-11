@@ -1,10 +1,8 @@
 'use server'
 
-import {
-  getPostsByCategoryPage,
-  type PostsPage,
-} from '@/external/repositories/postRepository.server'
+import { getPostsByCategoryPage } from '@/external/repositories/postRepository.server'
 import { categoryPostsPageInputSchema } from '@/external/schemas/postSchema'
+import type { PostsPage } from '@/types/post'
 
 // 無限スクロール用にカテゴリー別記事一覧の1ページ分を取得する Server Action。
 // 読み取りロジックは repository の getPostsByCategoryPage に集約している。

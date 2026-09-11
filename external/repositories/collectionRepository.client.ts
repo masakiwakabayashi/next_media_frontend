@@ -1,10 +1,9 @@
 // client-side only: クライアントコンポーネントから呼ばれる collections の書き込み系のみを持つ。
 // 読み取り（サーバーコンポーネントから利用）は collectionRepository.ts を参照。
 import { supabase } from '@/lib/supabase/client'
-import type { UpdateCollectionInput } from './collectionRepository.types'
+import type { UpdateCollectionInput } from '@/types/collection'
 
-// 型定義は collectionRepository.types.ts に集約している。
-export type * from './collectionRepository.types'
+// 型定義は types/collection.ts に集約している。
 
 export async function updateCollection(
   id: string,

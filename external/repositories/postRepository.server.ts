@@ -10,10 +10,9 @@ import type {
   PostMeta,
   PostForEdit,
   PostOption,
-} from './postRepository.types'
+} from '@/types/post'
 
-// 型定義は postRepository.types.ts に集約している。
-export type * from './postRepository.types'
+// 型定義は types/post.ts に集約している。
 
 const POST_LIST_SELECT = `
   id,
