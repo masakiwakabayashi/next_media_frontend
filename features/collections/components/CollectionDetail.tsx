@@ -22,7 +22,7 @@ export default async function CollectionDetail({ collectionSlug }: { collectionS
 
   return (
     <div>
-      <EyecatchImage src={collection.image_path} alt={collection.title} />
+      <EyecatchImage src={collection.image_url} alt={collection.title} />
 
       <h1 className="mb-2 text-2xl font-bold text-zinc-900 dark:text-zinc-100">
         {collection.title}
@@ -50,7 +50,7 @@ export default async function CollectionDetail({ collectionSlug }: { collectionS
               key={post.id}
               className="rounded-lg border border-zinc-200 p-6 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
             >
-              <EyecatchImage src={post.image_path} alt={post.title} />
+              <EyecatchImage src={post.image_url} alt={post.title} />
 
               <div className="mb-2 flex items-center gap-2 text-sm text-zinc-500">
                 {post.category && (

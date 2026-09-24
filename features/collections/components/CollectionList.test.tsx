@@ -15,6 +15,7 @@ function makeCollection(overrides: Partial<Collection> = {}): Collection {
     slug: 'feature-1',
     description: '特集の説明',
     image_path: null,
+    image_url: null,
     published_at: '2026-01-15T00:00:00.000Z',
     ...overrides,
   }

@@ -13,6 +13,7 @@ const post: PostSummary = {
   title: '下書き記事',
   slug: 'draft-post',
   image_path: null,
+  image_url: null,
   content: 'い'.repeat(120),
   status: 'draft',
   published_at: null,

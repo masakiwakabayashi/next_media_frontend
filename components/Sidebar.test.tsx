@@ -33,6 +33,7 @@ describe('Sidebar', () => {
         slug: 'feature',
         description: null,
         image_path: null,
+        image_url: null,
         published_at: '2024-01-01',
       },
     ])

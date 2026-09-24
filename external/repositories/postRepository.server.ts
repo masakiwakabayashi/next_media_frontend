@@ -2,6 +2,7 @@
 // 適用した状態で posts を読み取るためのリポジトリ。
 // クライアントコンポーネントからは import しないこと（next/headers を経由するため）。
 import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { attachImageUrls } from '@/external/repositories/storageRepository.server'
 import type {
   PostSummary,
   Post,
@@ -38,7 +39,12 @@ function cursorOrFilter(cursor: PostsCursor): string {
 }
 
 // pageSize + 1 件取得した rows から、1ページ分の posts と次カーソルを組み立てる。
-function buildPostsPage(rows: PostSummary[], pageSize: number): PostsPage {
+// 画像の署名付きURLは、表示する1ページ分にだけ発行する。
+async function buildPostsPage(
+  supabase: Awaited<ReturnType<typeof createServerSupabaseClient>>,
+  rows: Omit<PostSummary, 'image_url'>[],
+  pageSize: number
+): Promise<PostsPage> {
   const hasMore = rows.length > pageSize
   const posts = hasMore ? rows.slice(0, pageSize) : rows
   const tail = posts[posts.length - 1]
@@ -47,7 +53,7 @@ function buildPostsPage(rows: PostSummary[], pageSize: number): PostsPage {
       ? { publishedAt: tail.published_at, id: tail.id }
       : null
 
-  return { posts, nextCursor }
+  return { posts: await attachImageUrls(supabase, posts), nextCursor }
 }
 
 // 無限スクロール用のカーソルページネーション。
@@ -92,7 +98,7 @@ export async function getPostsPage({
     return { posts: [], nextCursor: null }
   }
 
-  return buildPostsPage(data ?? [], pageSize)
+  return buildPostsPage(supabase, data ?? [], pageSize)
 }
 
 // カテゴリー（slug）に属する公開記事の1ページ分をカーソルページネーションで取得する。
@@ -142,7 +148,7 @@ export async function getPostsByCategoryPage({
     return { posts: [], nextCursor: null }
   }
 
-  return buildPostsPage(data ?? [], pageSize)
+  return buildPostsPage(supabase, data ?? [], pageSize)
 }
 
 // タグ（slug）に紐づく公開記事の1ページ分をカーソルページネーションで取得する。
@@ -194,7 +200,7 @@ export async function getPostsByTagPage({
     return { posts: [], nextCursor: null }
   }
 
-  return buildPostsPage(data ?? [], pageSize)
+  return buildPostsPage(supabase, data ?? [], pageSize)
 }
 
 export async function getPost(slug: string): Promise<Post | null> {
@@ -226,7 +232,8 @@ export async function getPost(slug: string): Promise<Post | null> {
     return null
   }
 
-  return data
+  const [post] = await attachImageUrls(supabase, [data])
+  return post
 }
 
 export async function getPostMetaBySlug(slug: string): Promise<PostMeta | null> {
@@ -349,5 +356,5 @@ export async function getDraftPosts(): Promise<PostSummary[]> {
     return []
   }
 
-  return data || []
+  return attachImageUrls(supabase, data || [])
 }

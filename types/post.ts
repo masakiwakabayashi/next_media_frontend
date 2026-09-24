@@ -6,6 +6,8 @@ export type PostSummary = {
   title: string
   slug: string
   image_path: string | null
+  // 表示用の画像URL（ストレージの画像は署名付きURL）。image_path から組み立てる
+  image_url: string | null
   content: string
   status: 'draft' | 'published' | 'archived'
   published_at: string | null
@@ -31,6 +33,8 @@ export type Post = {
   title: string
   slug: string
   image_path: string | null
+  // 表示用の画像URL（ストレージの画像は署名付きURL）。image_path から組み立てる
+  image_url: string | null
   content: string
   google_maps_url: string | null
   status: 'draft' | 'published' | 'archived'

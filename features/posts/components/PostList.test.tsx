@@ -16,6 +16,7 @@ function makePost(overrides: Partial<PostSummary> = {}): PostSummary {
     title: 'テスト記事',
     slug: 'test-post',
     image_path: null,
+    image_url: null,
     content: 'あ'.repeat(120),
     status: 'published',
     published_at: '2026-01-15T00:00:00.000Z',

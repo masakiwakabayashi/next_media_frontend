@@ -25,6 +25,7 @@ const collection: Collection = {
   slug: 'gourmet',
   description: '美味しいお店を集めました',
   image_path: null,
+  image_url: null,
   published_at: '2026-01-15T00:00:00.000Z',
 }
 
@@ -36,6 +37,7 @@ function makePost(
     title: '記事1',
     slug: 'post-1',
     image_path: null,
+    image_url: null,
     content: '本文',
     published_at: '2026-01-15T00:00:00.000Z',
     category: { name: 'ニュース', slug: 'news' },

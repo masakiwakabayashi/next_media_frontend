@@ -16,6 +16,7 @@ const post: Post = {
   title: 'テスト記事のタイトル',
   slug: 'test-post',
   image_path: null,
+  image_url: null,
   content: '1行目\n2行目',
   google_maps_url: 'https://maps.google.com/?q=test',
   status: 'published',

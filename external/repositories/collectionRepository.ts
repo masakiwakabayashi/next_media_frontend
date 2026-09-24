@@ -1,6 +1,7 @@
 // server-side only: サーバーコンポーネントからのみ利用。ログインユーザーの
 // セッション（Cookie）を引き継ぎ、RLS を適用した状態で collections を読み取る。
 import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { attachImageUrls } from '@/external/repositories/storageRepository.server'
 import type {
   Collection,
   CollectionPost,
@@ -23,7 +24,7 @@ export async function getCollections(): Promise<Collection[]> {
     return []
   }
 
-  return data || []
+  return attachImageUrls(supabase, data || [])
 }
 
 export async function getCollection(
@@ -41,6 +42,8 @@ export async function getCollection(
     console.error('Error fetching collection:', collectionError)
     return { collection: null, posts: [] }
   }
+
+  const [collectionWithImage] = await attachImageUrls(supabase, [collection])
 
   const { data: collectionPosts, error: postsError } = await supabase
     .from('collection_posts')
@@ -63,14 +66,14 @@ export async function getCollection(
 
   if (postsError) {
     console.error('Error fetching collection posts:', postsError)
-    return { collection, posts: [] }
+    return { collection: collectionWithImage, posts: [] }
   }
 
   const posts = (collectionPosts || [])
     .map((cp) => cp.post)
-    .filter(Boolean)
+    .filter((post): post is NonNullable<typeof post> => Boolean(post))
 
-  return { collection, posts }
+  return { collection: collectionWithImage, posts: await attachImageUrls(supabase, posts) }
 }
 
 export async function getCollectionForEdit(

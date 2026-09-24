@@ -5,6 +5,8 @@ export type Collection = {
   slug: string
   description: string | null
   image_path: string | null
+  // 表示用の画像URL（ストレージの画像は署名付きURL）。image_path から組み立てる
+  image_url: string | null
   published_at: string | null
 }
 
@@ -15,6 +17,7 @@ export type CollectionPost = {
     title: string
     slug: string
     image_path: string | null
+    image_url: string | null
     content: string
     published_at: string | null
     category: {

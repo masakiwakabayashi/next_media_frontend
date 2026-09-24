@@ -19,7 +19,7 @@ function truncateContent(content: string, maxLength: number = 100): string {
 export default function PostCard({ post }: { post: PostSummary }) {
   return (
     <article className="rounded-lg border border-zinc-200 p-6 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700">
-      <EyecatchImage src={post.image_path} alt={post.title} />
+      <EyecatchImage src={post.image_url} alt={post.title} />
 
       <div className="mb-2 flex items-center gap-2 text-sm text-zinc-500">
         {post.category && (

@@ -8,20 +8,18 @@ type Props = {
   alt: string
 }
 
-const STORAGE_BASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
-  ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/post-images/`
-  : null
-
-// image_path はシード等の public/ 配下の相対パス（"/images/..."）、
-// blob:/data: のプレビュー、または Supabase Storage 上のオブジェクトキーのいずれか。
+// src はシード等の public/ 配下の相対パス（"/images/..."）、blob:/data: のプレビュー、
+// またはリポジトリで発行した Supabase Storage の署名付きURL（image_url）のいずれか。
+// post-images は private バケットのため、オブジェクトキーをここで公開URLに組み立てることはしない。
 // ローカルパス以外は next/image の最適化プロキシを経由させない
-// （ローカル環境の Supabase はループバックIPのため next/image がブロックする）。
+// （署名付きURLは発行のたびに変わりキャッシュが効かない上、
+// ローカル環境の Supabase はループバックIPのため next/image がブロックする）。
 function resolveSrc(src: string | null): string {
   if (!src) return '/no_image.png'
   if (src.startsWith('/') || src.startsWith('blob:') || src.startsWith('data:') || src.startsWith('http')) {
     return src
   }
-  return STORAGE_BASE_URL ? `${STORAGE_BASE_URL}${src}` : '/no_image.png'
+  return '/no_image.png'
 }
 
 export default function EyecatchImage({ src, alt }: Props) {

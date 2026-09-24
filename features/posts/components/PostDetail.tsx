@@ -33,7 +33,7 @@ export default async function PostDetail({ slug }: Props) {
   return (
     <article className="mx-auto max-w-3xl">
       {/* アイキャッチ画像 */}
-      <EyecatchImage src={post.image_path} alt={post.title} />
+      <EyecatchImage src={post.image_url} alt={post.title} />
 
       {/* カテゴリ・日付 */}
       <div className="mb-4 flex items-center gap-3 text-sm text-zinc-500">
