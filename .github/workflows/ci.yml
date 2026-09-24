@@ -22,3 +22,9 @@ jobs:
       run: pnpm test:unit
     - name: Build
       run: pnpm build
+      env:
+        # lib/supabase/* はモジュール読み込み時にクライアントを生成するため、
+        # ビルド時にも値が必要。CI のビルド確認用のダミー値（実際には接続しない）
+        NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+        NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: dummy-publishable-key
+        SUPABASE_SECRET_KEY: dummy-secret-key
