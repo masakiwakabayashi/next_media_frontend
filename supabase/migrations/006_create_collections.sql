@@ -42,14 +42,17 @@ CREATE POLICY "collections_select"
 
 CREATE POLICY "collections_insert"
   ON public.collections FOR INSERT
+  TO authenticated
   WITH CHECK (public.is_admin());
 
 CREATE POLICY "collections_update"
   ON public.collections FOR UPDATE
+  TO authenticated
   USING (public.is_admin());
 
 CREATE POLICY "collections_delete"
   ON public.collections FOR DELETE
+  TO authenticated
   USING (public.is_admin());
 
 -- collection_posts: 読み取りは全認証ユーザー（collections/posts の RLS で下書きへのアクセスは制限される）
@@ -60,10 +63,10 @@ CREATE POLICY "collection_posts_select"
   USING (true);
 
 CREATE POLICY "collection_posts_insert"
-  ON public.collection_posts FOR INSERT WITH CHECK (public.is_admin());
+  ON public.collection_posts FOR INSERT TO authenticated WITH CHECK (public.is_admin());
 
 CREATE POLICY "collection_posts_update"
-  ON public.collection_posts FOR UPDATE USING (public.is_admin());
+  ON public.collection_posts FOR UPDATE TO authenticated USING (public.is_admin());
 
 CREATE POLICY "collection_posts_delete"
-  ON public.collection_posts FOR DELETE USING (public.is_admin());
+  ON public.collection_posts FOR DELETE TO authenticated USING (public.is_admin());

@@ -22,14 +22,17 @@ CREATE POLICY "posts_select"
 
 CREATE POLICY "posts_insert"
   ON public.posts FOR INSERT
+  TO authenticated
   WITH CHECK (public.is_admin());
 
 CREATE POLICY "posts_update"
   ON public.posts FOR UPDATE
+  TO authenticated
   USING (public.is_admin());
 
 CREATE POLICY "posts_delete"
   ON public.posts FOR DELETE
+  TO authenticated
   USING (public.is_admin());
 
 -- profiles: 全認証ユーザーが読み取り可、書き込みは管理者のみ（自分自身の更新は本人も可）
@@ -40,13 +43,13 @@ CREATE POLICY "profiles_select"
   USING (true);
 
 CREATE POLICY "profiles_insert"
-  ON public.profiles FOR INSERT WITH CHECK (public.is_admin());
+  ON public.profiles FOR INSERT TO authenticated WITH CHECK (public.is_admin());
 
 CREATE POLICY "profiles_update"
-  ON public.profiles FOR UPDATE USING (public.is_admin() OR user_id = auth.uid());
+  ON public.profiles FOR UPDATE TO authenticated USING (public.is_admin() OR user_id = auth.uid());
 
 CREATE POLICY "profiles_delete"
-  ON public.profiles FOR DELETE USING (public.is_admin());
+  ON public.profiles FOR DELETE TO authenticated USING (public.is_admin());
 
 -- categories: 全認証ユーザーが読み取り可、書き込みは管理者のみ（未ログインユーザーは閲覧不可）
 CREATE POLICY "categories_select"
@@ -55,13 +58,13 @@ CREATE POLICY "categories_select"
   USING (true);
 
 CREATE POLICY "categories_insert"
-  ON public.categories FOR INSERT WITH CHECK (public.is_admin());
+  ON public.categories FOR INSERT TO authenticated WITH CHECK (public.is_admin());
 
 CREATE POLICY "categories_update"
-  ON public.categories FOR UPDATE USING (public.is_admin());
+  ON public.categories FOR UPDATE TO authenticated USING (public.is_admin());
 
 CREATE POLICY "categories_delete"
-  ON public.categories FOR DELETE USING (public.is_admin());
+  ON public.categories FOR DELETE TO authenticated USING (public.is_admin());
 
 -- tags: 全認証ユーザーが読み取り可、書き込みは管理者のみ（未ログインユーザーは閲覧不可）
 CREATE POLICY "tags_select"
@@ -70,13 +73,13 @@ CREATE POLICY "tags_select"
   USING (true);
 
 CREATE POLICY "tags_insert"
-  ON public.tags FOR INSERT WITH CHECK (public.is_admin());
+  ON public.tags FOR INSERT TO authenticated WITH CHECK (public.is_admin());
 
 CREATE POLICY "tags_update"
-  ON public.tags FOR UPDATE USING (public.is_admin());
+  ON public.tags FOR UPDATE TO authenticated USING (public.is_admin());
 
 CREATE POLICY "tags_delete"
-  ON public.tags FOR DELETE USING (public.is_admin());
+  ON public.tags FOR DELETE TO authenticated USING (public.is_admin());
 
 -- post_tags: 読み取りは全認証ユーザー（posts の RLS で下書きへのアクセスは制限される）
 -- 書き込みは管理者のみ（未ログインユーザーは閲覧不可）
@@ -86,10 +89,10 @@ CREATE POLICY "post_tags_select"
   USING (true);
 
 CREATE POLICY "post_tags_insert"
-  ON public.post_tags FOR INSERT WITH CHECK (public.is_admin());
+  ON public.post_tags FOR INSERT TO authenticated WITH CHECK (public.is_admin());
 
 CREATE POLICY "post_tags_update"
-  ON public.post_tags FOR UPDATE USING (public.is_admin());
+  ON public.post_tags FOR UPDATE TO authenticated USING (public.is_admin());
 
 CREATE POLICY "post_tags_delete"
-  ON public.post_tags FOR DELETE USING (public.is_admin());
+  ON public.post_tags FOR DELETE TO authenticated USING (public.is_admin());

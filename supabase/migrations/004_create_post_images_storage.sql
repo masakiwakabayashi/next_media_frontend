@@ -14,14 +14,17 @@ CREATE POLICY "post_images_select"
 -- アップロード: 管理者のみ
 CREATE POLICY "post_images_insert"
   ON storage.objects FOR INSERT
+  TO authenticated
   WITH CHECK (bucket_id = 'post-images' AND public.is_admin());
 
 -- 更新: 管理者のみ
 CREATE POLICY "post_images_update"
   ON storage.objects FOR UPDATE
+  TO authenticated
   USING (bucket_id = 'post-images' AND public.is_admin());
 
 -- 削除: 管理者のみ
 CREATE POLICY "post_images_delete"
   ON storage.objects FOR DELETE
+  TO authenticated
   USING (bucket_id = 'post-images' AND public.is_admin());
