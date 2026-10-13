@@ -1,0 +1,51 @@
+# syntax=docker/dockerfile:1
+# Cloud Run 用の本番イメージ（開発用は Dockerfile / docker-compose.yml）
+
+FROM node:20.18.0-bookworm-slim AS base
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+# Node 20.18 同梱の corepack は古く、pnpm 10 の署名検証で失敗するため更新してから有効化する
+RUN npm install -g corepack@latest && corepack enable
+
+# ---- 依存関係のインストール ----
+FROM base AS deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+# ---- ビルド ----
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# NEXT_PUBLIC_* はビルド時にクライアントバンドルと next.config.ts（画像の remotePatterns）へ埋め込まれるため、
+# ビルド引数で本番の値を渡す
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL \
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+
+# lib/supabase/server.ts はモジュール読み込み時にクライアントを生成するため、ビルド時にも値が必要。
+# 本物の秘密鍵はイメージに含めず、このステージ限定のダミー値を使う（実行時は Cloud Run の環境変数で渡す）
+RUN test -n "$NEXT_PUBLIC_SUPABASE_URL" && test -n "$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY" \
+    || (echo "NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY をビルド引数で指定してください" && exit 1)
+RUN SUPABASE_SECRET_KEY=build-time-dummy pnpm build
+
+# ---- 実行 ----
+FROM node:20.18.0-bookworm-slim AS runner
+WORKDIR /app
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    HOSTNAME=0.0.0.0 \
+    PORT=8080
+
+COPY --from=builder --chown=node:node /app/public ./public
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+
+USER node
+
+# Cloud Run が渡す PORT で待ち受ける（standalone の server.js は PORT / HOSTNAME を参照する）
+EXPOSE 8080
+CMD ["node", "server.js"]

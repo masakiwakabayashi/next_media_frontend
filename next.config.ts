@@ -5,6 +5,8 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   : null;
 
 const nextConfig: NextConfig = {
+  // Cloud Run 用イメージ（Dockerfile.prod）で .next/standalone を使うため
+  output: 'standalone',
   images: {
     remotePatterns: supabaseUrl
       ? [
