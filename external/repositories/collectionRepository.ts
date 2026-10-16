@@ -1,5 +1,6 @@
 // server-side only: サーバーコンポーネントからのみ利用。ログインユーザーの
 // セッション（Cookie）を引き継ぎ、RLS を適用した状態で collections を読み取る。
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { attachImageUrls } from '@/external/repositories/storageRepository.server'
 import type {
@@ -7,6 +8,7 @@ import type {
   CollectionPost,
   CollectionLinkedPost,
   CollectionForEdit,
+  CreateCollectionData,
 } from '@/types/collection'
 
 // 型定義は types/collection.ts に集約している。
@@ -107,4 +109,45 @@ export async function getCollectionForEdit(
     .filter((post): post is CollectionLinkedPost => Boolean(post))
 
   return { ...collection, posts }
+}
+
+// 以下は Server Action（external/handler/collection）から、呼び出し元の
+// セッションを引き継いだ supabase クライアントを受け取って書き込む。
+
+export async function createCollection(
+  supabase: SupabaseClient,
+  data: CreateCollectionData
+): Promise<{ data: { id: string } | null; error: string | null }> {
+  const { data: collection, error } = await supabase
+    .from('collections')
+    .insert(data)
+    .select('id')
+    .single()
+
+  if (error) {
+    return { data: null, error: error.message }
+  }
+
+  return { data: collection, error: null }
+}
+
+// 渡された順序で position 0..n-1 を振って collection_posts に insert する。
+export async function attachPostsToCollection(
+  supabase: SupabaseClient,
+  collectionId: string,
+  postIds: string[]
+): Promise<{ error: string | null }> {
+  const rows = postIds.map((postId, index) => ({
+    collection_id: collectionId,
+    post_id: postId,
+    position: index,
+  }))
+
+  const { error } = await supabase.from('collection_posts').insert(rows)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { error: null }
 }

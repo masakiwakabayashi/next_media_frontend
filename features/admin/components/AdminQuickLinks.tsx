@@ -19,13 +19,14 @@ function QuickLinkCard({ href, label }: QuickLinkProps) {
 const links: QuickLinkProps[] = [
   { href: '/admin/posts/new', label: '記事を作成' },
   { href: '/admin/posts/drafts', label: '下書き一覧' },
+  { href: '/admin/collections/new', label: '特集を作成' },
   { href: '/admin/tags', label: 'タグ管理' },
   { href: '/admin/users', label: 'ユーザー管理' },
 ]
 
 export default function AdminQuickLinks() {
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
       {links.map((link) => (
         <QuickLinkCard key={link.href} {...link} />
       ))}

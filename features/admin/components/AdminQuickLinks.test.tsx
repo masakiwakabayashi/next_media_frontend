@@ -14,6 +14,10 @@ describe('AdminQuickLinks', () => {
       'href',
       '/admin/posts/drafts'
     )
+    expect(screen.getByRole('link', { name: '特集を作成' })).toHaveAttribute(
+      'href',
+      '/admin/collections/new'
+    )
     expect(screen.getByRole('link', { name: 'タグ管理' })).toHaveAttribute(
       'href',
       '/admin/tags'
@@ -24,9 +28,9 @@ describe('AdminQuickLinks', () => {
     )
   })
 
-  it('リンクは4つ表示される', () => {
+  it('リンクは5つ表示される', () => {
     render(<AdminQuickLinks />)
 
-    expect(screen.getAllByRole('link')).toHaveLength(4)
+    expect(screen.getAllByRole('link')).toHaveLength(5)
   })
 })

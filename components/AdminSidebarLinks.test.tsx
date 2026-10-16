@@ -50,6 +50,10 @@ describe('AdminSidebarLinks', () => {
       'href',
       '/admin/posts/drafts'
     )
+    expect(screen.getByRole('link', { name: '特集を作成' })).toHaveAttribute(
+      'href',
+      '/admin/collections/new'
+    )
     expect(screen.getByRole('link', { name: 'タグ管理' })).toHaveAttribute(
       'href',
       '/admin/tags'

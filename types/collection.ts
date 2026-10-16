@@ -55,3 +55,5 @@ export type UpdateCollectionInput = {
   status: 'draft' | 'published' | 'archived'
   published_at: string | null
 }
+
+export type CreateCollectionData = UpdateCollectionInput
