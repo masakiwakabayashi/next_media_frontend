@@ -9,7 +9,6 @@ services:
       - /app/node_modules
       - /app/.next
     environment:
-      NODE_ENV: development
       NEXT_TELEMETRY_DISABLED: "1"
       WATCHPACK_POLLING: "true"
     init: true

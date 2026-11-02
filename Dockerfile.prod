@@ -35,8 +35,7 @@ RUN SUPABASE_SECRET_KEY=build-time-dummy pnpm build
 # ---- 実行 ----
 FROM node:20.18.0-bookworm-slim AS runner
 WORKDIR /app
-ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1 \
+ENV NEXT_TELEMETRY_DISABLED=1 \
     HOSTNAME=0.0.0.0 \
     PORT=8080
 
