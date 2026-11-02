@@ -3,8 +3,7 @@ FROM node:20.18.0-bookworm-slim
 
 WORKDIR /app
 
-ENV NODE_ENV=development \
-    NEXT_TELEMETRY_DISABLED=1 \
+ENV NEXT_TELEMETRY_DISABLED=1 \
     PORT=3000 \
     PATH=/app/node_modules/.bin:$PATH
 
