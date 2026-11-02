@@ -42,9 +42,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# ユーザーのシーダー
-supabase/seeds/00_user_seed.sql
-
 # DBのダンプファイル
 dump.sql
 

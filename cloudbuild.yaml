@@ -1,0 +1,39 @@
+# Cloud Run 本番デプロイ用の Cloud Build 構成
+# _ で始まる変数の値は Cloud Build トリガーの「代入変数」に登録する
+
+steps:
+  # NEXT_PUBLIC_* はビルド時にバンドルへ埋め込まれるため、ビルド引数で渡す
+  # SUPABASE_SECRET_KEY はここで渡さず、Cloud Run のシークレット参照で実行時に渡す
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - Dockerfile.prod
+      - --build-arg
+      - NEXT_PUBLIC_SUPABASE_URL=${_NEXT_PUBLIC_SUPABASE_URL}
+      - --build-arg
+      - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${_NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}
+      - -t
+      - ${_IMAGE}:$COMMIT_SHA
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_IMAGE}:$COMMIT_SHA
+
+  # 環境変数やシークレットは指定しないので、Cloud Run の既存の設定を引き継ぐ
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_IMAGE}:$COMMIT_SHA
+      - --region=${_REGION}
+
+images:
+  - ${_IMAGE}:$COMMIT_SHA
+
+options:
+  logging: CLOUD_LOGGING_ONLY

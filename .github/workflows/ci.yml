@@ -1,7 +1,8 @@
 name: CI
 on:
   push:
-    branches: [ main, master ]
+    # ci/supabase-db-test は DB テストの CI 検証用（検証後に削除する）
+    branches: [ main, master, ci/supabase-db-test ]
   pull_request:
     branches: [ main, master ]
 jobs:
@@ -28,3 +29,35 @@ jobs:
         NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
         NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: dummy-publishable-key
         SUPABASE_SECRET_KEY: dummy-secret-key
+  db-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Enable corepack
+      run: corepack enable
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+    - uses: supabase/setup-cli@v1
+      with:
+        # ローカル開発と同じバージョンに揃える
+        version: 2.62.5
+    - name: Start Supabase
+      # テストで使わないサービスは起動しない（DB / Auth / REST / Storage / Kong のみ使う）
+      run: supabase start -x studio,imgproxy,edge-runtime,logflare,vector,realtime,supavisor,postgres-meta
+    - name: Export Supabase env
+      # RLS テスト（supabase/tests/rls/helpers.ts）が参照する環境変数を、
+      # ローカルで起動した Supabase の値から設定する（.env.test は git 管理外のため）
+      run: |
+        eval "$(supabase status -o env 2>/dev/null | grep -E '^(API_URL|PUBLISHABLE_KEY|SECRET_KEY)=')"
+        echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL" >> "$GITHUB_ENV"
+        echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY" >> "$GITHUB_ENV"
+        echo "::add-mask::$SECRET_KEY"
+        echo "SUPABASE_SECRET_KEY=$SECRET_KEY" >> "$GITHUB_ENV"
+    - name: Database test (pgTAP)
+      run: supabase test db
+    - name: RLS test
+      run: pnpm exec vitest run supabase/tests
