@@ -48,6 +48,16 @@ export async function verifyEmailOtp(
   return { error: null }
 }
 
+export async function requestPasswordReset(email: string): Promise<{ error: string | null }> {
+  const { error } = await supabase.auth.resetPasswordForEmail(email)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { error: null }
+}
+
 export async function updatePassword(password: string): Promise<{ error: string | null }> {
   const { error } = await supabase.auth.updateUser({ password })
 

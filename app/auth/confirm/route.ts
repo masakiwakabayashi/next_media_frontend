@@ -16,5 +16,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/invite`)
+  // 検証失敗時は種別ごとの画面に戻し、そこで「リンクが無効」の案内を表示する
+  const fallbackPath = type === 'recovery' ? '/reset-password' : '/invite'
+  return NextResponse.redirect(`${origin}${fallbackPath}`)
 }
