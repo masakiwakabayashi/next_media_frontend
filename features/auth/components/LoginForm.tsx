@@ -1,6 +1,7 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signInWithPassword } from '@/external/repositories/authRepository'
 
@@ -79,6 +80,13 @@ export default function LoginForm() {
       >
         {isSubmitting ? 'ログイン中...' : 'ログイン'}
       </button>
+
+      <Link
+        href="/forgot-password"
+        className="block text-center text-sm text-zinc-600 underline hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+      >
+        パスワードをお忘れの方
+      </Link>
     </form>
   )
 }

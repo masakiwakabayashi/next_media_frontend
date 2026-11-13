@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import type { Database } from '@/external/database/database.types'
 
 // 認証不要で誰でもアクセスできるパス
-const PUBLIC_PATHS = ['/login', '/invite', '/auth']
+const PUBLIC_PATHS = ['/login', '/invite', '/auth', '/forgot-password', '/reset-password']
 
 function isPublicPath(pathname: string) {
   return PUBLIC_PATHS.some(

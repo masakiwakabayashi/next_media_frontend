@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthProvider'
 import { updatePassword } from '@/external/repositories/authRepository'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import { validateNewPassword } from '@/features/auth/utils/validateNewPassword'
 
 export default function AcceptInviteForm() {
   const router = useRouter()
@@ -18,13 +19,9 @@ export default function AcceptInviteForm() {
     event.preventDefault()
     setError(null)
 
-    if (password.length < 8) {
-      setError('パスワードは8文字以上で入力してください')
-      return
-    }
-
-    if (password !== confirmPassword) {
-      setError('パスワードが一致しません')
+    const validationError = validateNewPassword(password, confirmPassword)
+    if (validationError) {
+      setError(validationError)
       return
     }
 

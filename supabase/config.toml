@@ -202,6 +202,10 @@ otp_expiry = 3600
 subject = "招待されました"
 content_path = "./supabase/templates/invite.html"
 
+[auth.email.template.recovery]
+subject = "パスワードの再設定"
+content_path = "./supabase/templates/recovery.html"
+
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]
 # enabled = true
