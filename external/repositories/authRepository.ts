@@ -48,8 +48,26 @@ export async function verifyEmailOtp(
   return { error: null }
 }
 
+export async function exchangeCodeForSession(
+  client: SupabaseClient,
+  code: string
+): Promise<{ error: string | null }> {
+  const { error } = await client.auth.exchangeCodeForSession(code)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { error: null }
+}
+
 export async function requestPasswordReset(email: string): Promise<{ error: string | null }> {
-  const { error } = await supabase.auth.resetPasswordForEmail(email)
+  // デフォルトのメールテンプレート（{{ .ConfirmationURL }}）を使う環境では、
+  // 検証後にこの URL へ ?code= 付きで戻ってくる。
+  // カスタムテンプレート（/auth/confirm?token_hash=...）を使う環境では使われない。
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
+  })
 
   if (error) {
     return { error: error.message }
