@@ -1,11 +1,13 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
 import { exchangeAuthCode } from '@/external/handler/auth/exchangeAuthCode'
+import { redirectToPath } from '@/features/auth/utils/redirectToPath'
+import { getSafeNextPath } from '@/features/auth/utils/getSafeNextPath'
 
 // Supabase のデフォルトメールテンプレート（PKCE フロー）から戻ってきたときの受け口。
 // ?code= をセッションに交換し、next で指定された画面へ進める。
 // code_verifier は申請したブラウザの Cookie にあるため、別のブラウザで開くと交換に失敗する。
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = new URL(request.url)
+  const { searchParams } = request.nextUrl
   const code = searchParams.get('code')
   const next = getSafeNextPath(searchParams.get('next'))
 
@@ -15,13 +17,6 @@ export async function GET(request: NextRequest) {
     await exchangeAuthCode(code)
   }
 
-  return NextResponse.redirect(`${origin}${next}`)
+  return redirectToPath(next)
 }
 
-// オープンリダイレクトを防ぐため、同一オリジン内の絶対パスのみ許可する
-function getSafeNextPath(next: string | null): string {
-  if (!next || !next.startsWith('/') || next.startsWith('//')) {
-    return '/'
-  }
-  return next
-}
