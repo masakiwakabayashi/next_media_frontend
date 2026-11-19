@@ -1,3 +1,6 @@
+// @vitest-environment node
+// jsdom の Blob は Node の fetch で本文を正しく送れず、アップロードが Kong で 400 になってタイムアウトするため、
+// Node 環境で実行する（DOM は使わない）
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { randomUUID } from 'node:crypto'
 import { adminClient, anonClient, createAuthedClient, TEST_USERS } from './helpers'

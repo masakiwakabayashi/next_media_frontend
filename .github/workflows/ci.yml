@@ -57,6 +57,9 @@ jobs:
         echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY" >> "$GITHUB_ENV"
         echo "::add-mask::$SECRET_KEY"
         echo "SUPABASE_SECRET_KEY=$SECRET_KEY" >> "$GITHUB_ENV"
+    - name: Check RLS test coverage
+      # public スキーマの全テーブルに supabase/tests/rls/<テーブル名>.rls.test.ts があるか確認する
+      run: pnpm check:rls-tests
     - name: Database test (pgTAP)
       run: supabase test db
     - name: RLS test
