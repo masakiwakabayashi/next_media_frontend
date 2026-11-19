@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { supabaseAdmin } from '@/lib/supabase/server'
 import { setUserBannedSchema } from '@/external/schemas/userSchema'
+import { assertAdmin } from '@/external/handler/auth/assertAdmin'
 
 // Supabase では無期限BANを表現する期間指定が無いため、
 // 公式ドキュメント記載の慣例(100年)を無効化として扱う
@@ -11,6 +12,12 @@ const BAN_DURATION = '876000h'
 export async function setUserBannedAction(
   input: unknown
 ): Promise<{ error: string | null }> {
+  const adminCheck = await assertAdmin()
+
+  if (adminCheck.error) {
+    return adminCheck
+  }
+
   const parsed = setUserBannedSchema.safeParse(input)
 
   if (!parsed.success) {
