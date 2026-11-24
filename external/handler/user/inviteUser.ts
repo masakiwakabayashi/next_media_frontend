@@ -4,10 +4,17 @@ import { headers } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { inviteUser } from '@/external/repositories/authAdminRepository'
 import { inviteUserSchema } from '@/external/schemas/userSchema'
+import { assertAdmin } from '@/external/handler/auth/assertAdmin'
 
 export async function inviteUserAction(
   input: unknown
 ): Promise<{ error: string | null }> {
+  const adminCheck = await assertAdmin()
+
+  if (adminCheck.error) {
+    return adminCheck
+  }
+
   const parsed = inviteUserSchema.safeParse(input)
 
   if (!parsed.success) {

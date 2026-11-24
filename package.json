@@ -10,7 +10,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:unit": "vitest run --exclude 'supabase/tests/**'",
-    "gen:types": "supabase gen types typescript --local > external/database/database.types.ts"
+    "gen:types": "supabase gen types typescript --local > external/database/database.types.ts",
+    "check:rls-tests": "node scripts/check-rls-tests.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
