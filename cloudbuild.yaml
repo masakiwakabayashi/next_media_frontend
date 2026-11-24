@@ -4,11 +4,12 @@
 steps:
   # NEXT_PUBLIC_* はビルド時にバンドルへ埋め込まれるため、ビルド引数で渡す
   # SUPABASE_SECRET_KEY はここで渡さず、Cloud Run のシークレット参照で実行時に渡す
+  # モノレポのため、ビルドコンテキストはリポジトリのルート（最後の "."）にする
   - name: gcr.io/cloud-builders/docker
     args:
       - build
       - -f
-      - Dockerfile.prod
+      - web/Dockerfile.prod
       - --build-arg
       - NEXT_PUBLIC_SUPABASE_URL=${_NEXT_PUBLIC_SUPABASE_URL}
       - --build-arg

@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -11,14 +11,14 @@
 !.yarn/versions
 
 # testing
-/coverage
+coverage/
 
-# next.js
-/.next/
-/out/
+# next.js（どの階層のものも無視する）
+.next/
+/web/out/
 
 # production
-/build
+/web/build
 
 # misc
 .DS_Store
@@ -48,12 +48,11 @@ dump.sql
 # シードデータ記事のアイキャッチ画像
 supabase/seed_post_images
 
-# Playwright
-node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
-/e2e/.auth/
+# Playwright（どの階層のものも無視する）
+test-results/
+playwright-report/
+blob-report/
+**/playwright/.cache/
+**/playwright/.auth/
+**/e2e/.auth/
 .gstack/

@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
 # Cloud Run 用の本番イメージ（開発用は Dockerfile / docker-compose.yml）
+# ビルドコンテキストはリポジトリのルート（docker build -f web/Dockerfile.prod .）
 
 FROM node:20.18.0-bookworm-slim AS base
 ENV NEXT_TELEMETRY_DISABLED=1 \
@@ -8,16 +9,20 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
 RUN npm install -g corepack@latest && corepack enable
 
 # ---- 依存関係のインストール ----
+# web に必要なパッケージだけをインストールする（将来の mobile などは含めない）
 FROM base AS deps
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY web/package.json ./web/
+RUN pnpm install --frozen-lockfile --filter web...
 
 # ---- ビルド ----
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+COPY --from=deps /app/web/node_modules ./web/node_modules
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY web ./web
 
 # NEXT_PUBLIC_* はビルド時にクライアントバンドルと next.config.ts（画像の remotePatterns）へ埋め込まれるため、
 # ビルド引数で本番の値を渡す
@@ -30,7 +35,7 @@ ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL \
 # 本物の秘密鍵はイメージに含めず、このステージ限定のダミー値を使う（実行時は Cloud Run の環境変数で渡す）
 RUN test -n "$NEXT_PUBLIC_SUPABASE_URL" && test -n "$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY" \
     || (echo "NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY をビルド引数で指定してください" && exit 1)
-RUN SUPABASE_SECRET_KEY=build-time-dummy pnpm build
+RUN SUPABASE_SECRET_KEY=build-time-dummy pnpm --filter web build
 
 # ---- 実行 ----
 FROM node:20.18.0-bookworm-slim AS runner
@@ -39,12 +44,13 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
     HOSTNAME=0.0.0.0 \
     PORT=8080
 
-COPY --from=builder --chown=node:node /app/public ./public
-COPY --from=builder --chown=node:node /app/.next/standalone ./
-COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+# モノレポでは standalone の出力が web/ 以下に入る（next.config.ts の outputFileTracingRoot を参照）
+COPY --from=builder --chown=node:node /app/web/.next/standalone ./
+COPY --from=builder --chown=node:node /app/web/public ./web/public
+COPY --from=builder --chown=node:node /app/web/.next/static ./web/.next/static
 
 USER node
 
 # Cloud Run が渡す PORT で待ち受ける（standalone の server.js は PORT / HOSTNAME を参照する）
 EXPOSE 8080
-CMD ["node", "server.js"]
+CMD ["node", "web/server.js"]
