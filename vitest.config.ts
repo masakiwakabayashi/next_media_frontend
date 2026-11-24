@@ -1,21 +1,20 @@
 import { defineConfig } from 'vitest/config'
 import * as dotenv from 'dotenv'
 import * as path from 'path'
-import react from '@vitejs/plugin-react'
 
-dotenv.config({ path: path.resolve(__dirname, '.env.test') })
+// supabase/tests/rls（RLS テスト）専用の設定。Web のユニットテストは web/vitest.config.ts を使う。
+// 接続先はローカル Supabase。値は web/.env.test から読む（CI では環境変数で渡す）
+dotenv.config({ path: path.resolve(__dirname, 'web/.env.test') })
 
 export default defineConfig({
-  plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '.'),
+      // helpers.ts が DB の型（web/external/database/database.types.ts）を参照するため
+      '@': path.resolve(__dirname, 'web'),
     },
   },
   test: {
-    include: ['**/*.test.ts', '**/*.test.tsx'],
-    exclude: ['node_modules/**', '.next/**', 'e2e/**'],
-    environment: 'jsdom',
-    setupFiles: ['./vitest.setup.ts'],
+    include: ['supabase/tests/**/*.test.ts'],
+    environment: 'node',
   },
 })

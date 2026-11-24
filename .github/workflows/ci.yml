@@ -63,4 +63,5 @@ jobs:
     - name: Database test (pgTAP)
       run: supabase test db
     - name: RLS test
-      run: pnpm exec vitest run supabase/tests
+      # ルートの vitest.config.ts（supabase/tests 専用）で実行する
+      run: pnpm test:rls

@@ -2,12 +2,15 @@ services:
   web:
     build:
       context: .
+      dockerfile: web/Dockerfile
     ports:
       - "3000:3000"
     volumes:
       - .:/app
+      # コンテナ内でインストールした node_modules とビルド結果を、ホスト側のもので上書きしない
       - /app/node_modules
-      - /app/.next
+      - /app/web/node_modules
+      - /app/web/.next
     environment:
       NEXT_TELEMETRY_DISABLED: "1"
       WATCHPACK_POLLING: "true"
