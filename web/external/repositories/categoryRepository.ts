@@ -1,37 +1,18 @@
 // server-side only: サーバーコンポーネントからのみ利用。ログインユーザーの
 // セッション（Cookie）を引き継ぎ、RLS を適用した状態で categories を読み取る。
+//
+// 読み取りの処理は mobile と共有するため shared にある。
+// ここではサーバー用のクライアントを作って shared の関数に渡す。
 import { createServerSupabaseClient } from '@/lib/supabase/server'
+import * as sharedCategoryRepository from 'shared/external/repositories/categoryRepository'
 import type { Category } from '@/types/category'
 
-// 型定義は types/category.ts に集約している。
+// 型定義は types/category.ts（実体は shared/src/types/category.ts）に集約している。
 
 export async function getCategories(): Promise<Category[]> {
-  const supabase = await createServerSupabaseClient()
-  const { data, error } = await supabase
-    .from('categories')
-    .select('id, name, slug')
-    .order('name')
-
-  if (error) {
-    console.error('Error fetching categories:', error)
-    return []
-  }
-
-  return data || []
+  return sharedCategoryRepository.getCategories(await createServerSupabaseClient())
 }
 
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {
-  const supabase = await createServerSupabaseClient()
-  const { data, error } = await supabase
-    .from('categories')
-    .select('id, name, slug')
-    .eq('slug', slug)
-    .maybeSingle()
-
-  if (error) {
-    console.error('Error fetching category by slug:', error)
-    return null
-  }
-
-  return data
+  return sharedCategoryRepository.getCategoryBySlug(await createServerSupabaseClient(), slug)
 }

@@ -19,6 +19,9 @@ jobs:
       run: pnpm install --frozen-lockfile
     - name: Lint
       run: pnpm lint
+    - name: Typecheck (shared)
+      # shared は web と mobile の両方から使うため、web のビルドとは別に単体で型チェックする
+      run: pnpm typecheck
     - name: Unit test
       run: pnpm test:unit
     - name: Build

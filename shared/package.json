@@ -1,0 +1,18 @@
+{
+  "name": "shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "web と mobile で共有する、読み取り専用のコード（DB の型・読み取り用の型・読み取りクエリ）",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.83.0"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}

@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
   // モノレポのルートを起点に依存ファイルを集める。
   // standalone の出力は .next/standalone/web/server.js になる（Dockerfile.prod はこの配置を前提にしている）
   outputFileTracingRoot: path.join(__dirname, ".."),
+  // shared はビルドせず TypeScript のまま参照するため、Next.js 側でトランスパイルする
+  transpilePackages: ['shared'],
   images: {
     remotePatterns: supabaseUrl
       ? [

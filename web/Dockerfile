@@ -10,6 +10,7 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY web/package.json ./web/
+COPY shared/package.json ./shared/
 # Node 20.18 同梱の corepack は古く、pnpm 10 の署名検証で失敗するため更新してから有効化する
 RUN npm install -g corepack@latest && corepack enable && pnpm install --frozen-lockfile --filter web...
 

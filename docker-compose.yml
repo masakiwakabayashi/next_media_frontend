@@ -10,6 +10,7 @@ services:
       # コンテナ内でインストールした node_modules とビルド結果を、ホスト側のもので上書きしない
       - /app/node_modules
       - /app/web/node_modules
+      - /app/shared/node_modules
       - /app/web/.next
     environment:
       NEXT_TELEMETRY_DISABLED: "1"

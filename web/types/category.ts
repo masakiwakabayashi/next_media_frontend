@@ -1,6 +1,3 @@
-// categories に関する、コンポーネントとリポジトリの双方から参照する型定義。
-export type Category = {
-  id: string
-  name: string
-  slug: string
-}
+// categories に関する型定義。mobile と共有するため shared/src/types/category.ts にあり、
+// ここでは web からの import を変えずに済むよう re-export している。
+export type { Category } from 'shared/types/category'

@@ -1,46 +1,24 @@
 // server-side only: ログインユーザーのセッション（Cookie）を引き継ぎ、RLS を
 // 適用した状態で tags を読み取るためのリポジトリ。
+//
+// 一覧・slug での取得は mobile と共有するため shared にある。
+// ここではサーバー用のクライアントを作って shared の関数に渡す。
+// 管理画面のセレクトボックス用（getTagOptions）は web 専用なので、ここに直接書いている。
 import { createServerSupabaseClient } from '@/lib/supabase/server'
+import * as sharedTagRepository from 'shared/external/repositories/tagRepository'
 import type { Tag, TagWithCount } from '@/types/tag'
 
-// 型定義は types/tag.ts に集約している。
+// 型定義は types/tag.ts（実体は shared/src/types/tag.ts）に集約している。
 
 export async function getTags(): Promise<TagWithCount[]> {
-  const supabase = await createServerSupabaseClient()
-  const { data, error } = await supabase
-    .from('tags')
-    .select('id, name, slug, created_at, post_tags(count)')
-    .order('name')
-
-  if (error) {
-    console.error('Error fetching tags:', error)
-    return []
-  }
-
-  return (data || []).map((tag) => ({
-    id: tag.id,
-    name: tag.name,
-    slug: tag.slug,
-    created_at: tag.created_at,
-    postCount: tag.post_tags?.[0]?.count ?? 0,
-  }))
+  return sharedTagRepository.getTags(await createServerSupabaseClient())
 }
 
 export async function getTagBySlug(slug: string): Promise<Tag | null> {
-  const supabase = await createServerSupabaseClient()
-  const { data, error } = await supabase
-    .from('tags')
-    .select('id, name, slug, created_at')
-    .eq('slug', slug)
-    .maybeSingle()
-
-  if (error) {
-    console.error('Error fetching tag by slug:', error)
-    return null
-  }
-
-  return data
+  return sharedTagRepository.getTagBySlug(await createServerSupabaseClient(), slug)
 }
+
+// ---- ここから下は web 専用 ----
 
 export async function getTagOptions(): Promise<Tag[]> {
   const supabase = await createServerSupabaseClient()
