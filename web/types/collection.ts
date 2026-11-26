@@ -1,31 +1,7 @@
 // collections に関する、コンポーネントとリポジトリの双方から参照する型定義。
-export type Collection = {
-  id: string
-  title: string
-  slug: string
-  description: string | null
-  image_path: string | null
-  // 表示用の画像URL（ストレージの画像は署名付きURL）。image_path から組み立てる
-  image_url: string | null
-  published_at: string | null
-}
-
-export type CollectionPost = {
-  position: number
-  post: {
-    id: string
-    title: string
-    slug: string
-    image_path: string | null
-    image_url: string | null
-    content: string
-    published_at: string | null
-    category: {
-      name: string
-      slug: string
-    } | null
-  }
-}
+// 読み取り（公開済みコレクションの一覧・詳細）の型は、mobile と共有するため shared/src/types/collection.ts にある。
+// ここでは web からの import を変えずに済むよう re-export し、web 専用（編集・管理画面）の型だけを定義する。
+export type { Collection, CollectionPost } from 'shared/types/collection'
 
 // 特集に紐づく記事の編集フォーム表示用（表示順は position 昇順）。
 export type CollectionLinkedPost = {

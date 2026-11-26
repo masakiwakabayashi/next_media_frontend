@@ -9,11 +9,12 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
 RUN npm install -g corepack@latest && corepack enable
 
 # ---- 依存関係のインストール ----
-# web に必要なパッケージだけをインストールする（将来の mobile などは含めない）
+# web と、web が使う shared に必要なパッケージだけをインストールする（将来の mobile などは含めない）
 FROM base AS deps
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY web/package.json ./web/
+COPY shared/package.json ./shared/
 RUN pnpm install --frozen-lockfile --filter web...
 
 # ---- ビルド ----
@@ -21,7 +22,9 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/web/node_modules ./web/node_modules
+COPY --from=deps /app/shared/node_modules ./shared/node_modules
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY shared ./shared
 COPY web ./web
 
 # NEXT_PUBLIC_* はビルド時にクライアントバンドルと next.config.ts（画像の remotePatterns）へ埋め込まれるため、

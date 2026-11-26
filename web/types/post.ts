@@ -1,80 +1,16 @@
 // posts に関する、コンポーネントとリポジトリの双方から参照する型定義。
+// 読み取り（公開済み記事の一覧・詳細）の型は、mobile と共有するため shared/src/types/post.ts にある。
+// ここでは web からの import を変えずに済むよう re-export し、web 専用（作成・編集・管理画面）の型だけを定義する。
 import type { CreatePostInput } from '@/external/schemas/postSchema'
+import type { PostSummary } from 'shared/types/post'
 
-export type PostSummary = {
-  id: string
-  title: string
-  slug: string
-  image_path: string | null
-  // 表示用の画像URL（ストレージの画像は署名付きURL）。image_path から組み立てる
-  image_url: string | null
-  content: string
-  status: 'draft' | 'published' | 'archived'
-  published_at: string | null
-  created_at: string
-  author: {
-    display_name: string
-  } | null
-  category: {
-    name: string
-    slug: string
-  } | null
-  post_tags: {
-    tag: {
-      id: string
-      name: string
-      slug: string
-    }
-  }[]
-}
-
-export type Post = {
-  id: string
-  title: string
-  slug: string
-  image_path: string | null
-  // 表示用の画像URL（ストレージの画像は署名付きURL）。image_path から組み立てる
-  image_url: string | null
-  content: string
-  google_maps_url: string | null
-  status: 'draft' | 'published' | 'archived'
-  published_at: string | null
-  created_at: string
-  author: {
-    display_name: string
-    bio: string | null
-    avatar_url: string | null
-  } | null
-  category: {
-    name: string
-    slug: string
-  } | null
-  post_tags: {
-    tag: {
-      id: string
-      name: string
-      slug: string
-    }
-  }[]
-}
+export type { PostSummary, Post, PostsCursor, PostsPage } from 'shared/types/post'
 
 export type CreatePostData = CreatePostInput
 
 export type PostListResult = {
   posts: PostSummary[]
   totalCount: number
-}
-
-// 無限スクロール用のカーソル。(published_at, id) の複合キーで
-// 「最後に読み込んだ記事より後ろ」を表す。
-export type PostsCursor = {
-  publishedAt: string
-  id: string
-}
-
-export type PostsPage = {
-  posts: PostSummary[]
-  nextCursor: PostsCursor | null
 }
 
 export type PostMeta = {

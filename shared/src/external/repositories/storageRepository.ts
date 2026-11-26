@@ -1,14 +1,13 @@
-// server-side only: post-images バケットの画像を表示するための署名付きURLを発行する。
+// post-images バケットの画像を表示するための署名付きURLを発行する。
 // post-images は private バケットのため公開URLでは表示できない。
 // ログインユーザーのセッションで発行するので、未ログインユーザーは RLS により発行できない。
-import type { createServerSupabaseClient } from '@/lib/supabase/server'
-
-type ServerSupabaseClient = Awaited<ReturnType<typeof createServerSupabaseClient>>
+// 署名付きURLは発行のたびに変わり、SIGNED_URL_EXPIRES_IN 秒で期限が切れる。
+import type { SharedSupabaseClient } from '../supabaseClient'
 
 const POST_IMAGES_BUCKET = 'post-images'
 const SIGNED_URL_EXPIRES_IN = 60 * 60
 
-// image_path はシード等の public/ 配下の相対パス（"/images/..."）、外部URL、
+// image_path はシード等の web/public/ 配下の相対パス（"/images/..."）、外部URL、
 // または Supabase Storage 上のオブジェクトキーのいずれか。署名が必要なのはオブジェクトキーのみ。
 function isStorageKey(path: string): boolean {
   return !/^(\/|https?:|blob:|data:)/.test(path)
@@ -17,7 +16,7 @@ function isStorageKey(path: string): boolean {
 // 各要素の image_path から表示用の image_url を付与する。
 // オブジェクトキーは createSignedUrls で1回の通信にまとめて署名する。
 export async function attachImageUrls<T extends { image_path: string | null }>(
-  supabase: ServerSupabaseClient,
+  supabase: SharedSupabaseClient,
   items: T[]
 ): Promise<(T & { image_url: string | null })[]> {
   const keys = [

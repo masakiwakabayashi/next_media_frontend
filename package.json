@@ -6,15 +6,17 @@
     "dev": "pnpm --filter web dev",
     "build": "pnpm --filter web build",
     "lint": "pnpm --filter web lint",
+    "typecheck": "pnpm --filter shared typecheck",
     "test": "pnpm test:unit && pnpm test:rls",
     "test:unit": "pnpm --filter web test",
     "test:rls": "vitest run",
-    "gen:types": "supabase gen types typescript --local > web/external/database/database.types.ts",
+    "gen:types": "supabase gen types typescript --local > shared/src/external/database/database.types.ts",
     "check:rls-tests": "node scripts/check-rls-tests.mjs"
   },
   "devDependencies": {
     "@supabase/supabase-js": "^2.83.0",
     "dotenv": "^16.6.1",
+    "shared": "workspace:*",
     "vitest": "^4.1.10"
   },
   "packageManager": "pnpm@10.12.1"

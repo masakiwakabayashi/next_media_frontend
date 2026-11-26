@@ -1,8 +1,12 @@
 // server-side only: サーバーコンポーネントからのみ利用。ログインユーザーの
 // セッション（Cookie）を引き継ぎ、RLS を適用した状態で collections を読み取る。
+//
+// 公開済みコレクションの読み取り（一覧・詳細）は mobile と共有するため shared にある。
+// ここではサーバー用のクライアントを作って shared の関数に渡す。
+// 編集用の読み取りと書き込みは web 専用なので、ここに直接書いている。
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
-import { attachImageUrls } from '@/external/repositories/storageRepository.server'
+import * as sharedCollectionRepository from 'shared/external/repositories/collectionRepository'
 import type {
   Collection,
   CollectionPost,
@@ -11,72 +15,19 @@ import type {
   CreateCollectionData,
 } from '@/types/collection'
 
-// 型定義は types/collection.ts に集約している。
+// 型定義は types/collection.ts（読み取り用の型は shared/src/types/collection.ts）に集約している。
 
 export async function getCollections(): Promise<Collection[]> {
-  const supabase = await createServerSupabaseClient()
-  const { data, error } = await supabase
-    .from('collections')
-    .select('id, title, slug, description, image_path, published_at')
-    .eq('status', 'published')
-    .order('published_at', { ascending: false })
-
-  if (error) {
-    console.error('Error fetching collections:', error)
-    return []
-  }
-
-  return attachImageUrls(supabase, data || [])
+  return sharedCollectionRepository.getCollections(await createServerSupabaseClient())
 }
 
 export async function getCollection(
   slug: string
 ): Promise<{ collection: Collection | null; posts: CollectionPost['post'][] }> {
-  const supabase = await createServerSupabaseClient()
-  const { data: collection, error: collectionError } = await supabase
-    .from('collections')
-    .select('id, title, slug, description, image_path, published_at')
-    .eq('slug', slug)
-    .eq('status', 'published')
-    .single()
-
-  if (collectionError || !collection) {
-    console.error('Error fetching collection:', collectionError)
-    return { collection: null, posts: [] }
-  }
-
-  const [collectionWithImage] = await attachImageUrls(supabase, [collection])
-
-  const { data: collectionPosts, error: postsError } = await supabase
-    .from('collection_posts')
-    .select(
-      `
-      position,
-      post:posts(
-        id,
-        title,
-        slug,
-        image_path,
-        content,
-        published_at,
-        category:categories(name, slug)
-      )
-    `
-    )
-    .eq('collection_id', collection.id)
-    .order('position', { ascending: true })
-
-  if (postsError) {
-    console.error('Error fetching collection posts:', postsError)
-    return { collection: collectionWithImage, posts: [] }
-  }
-
-  const posts = (collectionPosts || [])
-    .map((cp) => cp.post)
-    .filter((post): post is NonNullable<typeof post> => Boolean(post))
-
-  return { collection: collectionWithImage, posts: await attachImageUrls(supabase, posts) }
+  return sharedCollectionRepository.getCollection(await createServerSupabaseClient(), slug)
 }
+
+// ---- ここから下は web 専用 ----
 
 export async function getCollectionForEdit(
   slug: string
