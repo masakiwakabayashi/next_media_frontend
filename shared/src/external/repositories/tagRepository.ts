@@ -1,9 +1,10 @@
 // tags を読み取るリポジトリ（web と mobile で共有）。
 // ログインユーザーとして RLS が適用されたクライアントを引数で受け取る。
-import type { SharedSupabaseClient } from '../supabaseClient'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import type { Database } from '../database/database.types'
 import type { Tag, TagWithCount } from '../../types/tag'
 
-export async function getTags(supabase: SharedSupabaseClient): Promise<TagWithCount[]> {
+export async function getTags(supabase: SupabaseClient<Database>): Promise<TagWithCount[]> {
   const { data, error } = await supabase
     .from('tags')
     .select('id, name, slug, created_at, post_tags(count)')
@@ -23,7 +24,7 @@ export async function getTags(supabase: SharedSupabaseClient): Promise<TagWithCo
   }))
 }
 
-export async function getTagBySlug(supabase: SharedSupabaseClient, slug: string): Promise<Tag | null> {
+export async function getTagBySlug(supabase: SupabaseClient<Database>, slug: string): Promise<Tag | null> {
   const { data, error } = await supabase
     .from('tags')
     .select('id, name, slug, created_at')

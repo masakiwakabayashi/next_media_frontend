@@ -1,11 +1,12 @@
 // 公開済みの collections を読み取るリポジトリ（web と mobile で共有）。
 // ログインユーザーとして RLS が適用されたクライアントを引数で受け取る。
 // 編集用の読み取りと書き込みは web/external/repositories/collectionRepository.ts にある。
-import type { SharedSupabaseClient } from '../supabaseClient'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import type { Database } from '../database/database.types'
 import { attachImageUrls } from './storageRepository'
 import type { Collection, CollectionPost } from '../../types/collection'
 
-export async function getCollections(supabase: SharedSupabaseClient): Promise<Collection[]> {
+export async function getCollections(supabase: SupabaseClient<Database>): Promise<Collection[]> {
   const { data, error } = await supabase
     .from('collections')
     .select('id, title, slug, description, image_path, published_at')
@@ -21,7 +22,7 @@ export async function getCollections(supabase: SharedSupabaseClient): Promise<Co
 }
 
 export async function getCollection(
-  supabase: SharedSupabaseClient,
+  supabase: SupabaseClient<Database>,
   slug: string
 ): Promise<{ collection: Collection | null; posts: CollectionPost['post'][] }> {
   const { data: collection, error: collectionError } = await supabase

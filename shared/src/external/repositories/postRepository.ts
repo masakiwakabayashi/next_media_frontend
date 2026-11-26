@@ -3,7 +3,8 @@
 //
 // posts の RLS では管理者が下書きも読めるため、ここの関数は必ず status = 'published' で絞る。
 // 下書きや編集用の読み取りは web/external/repositories/postRepository.server.ts にある。
-import type { SharedSupabaseClient } from '../supabaseClient'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import type { Database } from '../database/database.types'
 import { attachImageUrls } from './storageRepository'
 import type { PostSummary, Post, PostsCursor, PostsPage } from '../../types/post'
 
@@ -33,7 +34,7 @@ function cursorOrFilter(cursor: PostsCursor): string {
 // pageSize + 1 件取得した rows から、1ページ分の posts と次カーソルを組み立てる。
 // 画像の署名付きURLは、表示する1ページ分にだけ発行する。
 async function buildPostsPage(
-  supabase: SharedSupabaseClient,
+  supabase: SupabaseClient<Database>,
   rows: Omit<PostSummary, 'image_url'>[],
   pageSize: number
 ): Promise<PostsPage> {
@@ -52,7 +53,7 @@ async function buildPostsPage(
 // published_at 降順・id 降順で並べ、cursor 以降を pageSize 件返す。
 // pageSize + 1 件取得して「次ページがあるか」を判定する。
 export async function getPostsPage(
-  supabase: SharedSupabaseClient,
+  supabase: SupabaseClient<Database>,
   {
     query,
     cursor,
@@ -96,7 +97,7 @@ export async function getPostsPage(
 
 // カテゴリー（slug）に属する公開記事の1ページ分をカーソルページネーションで取得する。
 export async function getPostsByCategoryPage(
-  supabase: SharedSupabaseClient,
+  supabase: SupabaseClient<Database>,
   {
     categorySlug,
     cursor,
@@ -149,7 +150,7 @@ export async function getPostsByCategoryPage(
 // post_tags を直接フィルタすると付随タグが欠落するため、まず post_id を集めてから
 // その id 集合で posts を引く2段構成にしている。
 export async function getPostsByTagPage(
-  supabase: SharedSupabaseClient,
+  supabase: SupabaseClient<Database>,
   {
     tagSlug,
     cursor,
@@ -198,7 +199,7 @@ export async function getPostsByTagPage(
   return buildPostsPage(supabase, data ?? [], pageSize)
 }
 
-export async function getPost(supabase: SharedSupabaseClient, slug: string): Promise<Post | null> {
+export async function getPost(supabase: SupabaseClient<Database>, slug: string): Promise<Post | null> {
   const { data, error } = await supabase
     .from('posts')
     .select(`

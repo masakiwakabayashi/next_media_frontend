@@ -10,7 +10,6 @@ src/
 └── external/
     ├── database/
     │   └── database.types.ts # DB の型（pnpm gen:types の出力先）
-    ├── supabaseClient.ts     # 共通のクライアント型
     └── repositories/         # 公開済みデータの読み取りクエリ
 ```
 
